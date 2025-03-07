@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AvaloniaProject">
+    <option name="projectPerEditor">
+      <map>
+        <entry key="SecureNotesPlus/EditWindow.axaml" value="SecureNotesPlus/SecureNotesPlus.csproj" />
+        <entry key="SecureNotesPlus/MainWindow.axaml" value="SecureNotesPlus/SecureNotesPlus.csproj" />
+        <entry key="SecureNotesPlus/NewFile.axaml" value="SecureNotesPlus/SecureNotesPlus.csproj" />
+      </map>
+    </option>
+  </component>
+</project>

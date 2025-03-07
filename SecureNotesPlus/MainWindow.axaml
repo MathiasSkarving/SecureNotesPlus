@@ -1,0 +1,30 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="500" d:DesignHeight="450"
+        Width="500"
+        Height="450"
+        WindowStartupLocation="CenterScreen"
+        x:Class="SecureNotesPlus.MainWindow"
+        Title="SecureNotesPlus">
+        <Window.Background>
+                SlateGray
+        </Window.Background>
+        
+        <StackPanel>
+                <StackPanel Orientation="Horizontal">
+                        <TextBox HorizontalAlignment="Left" Width = "350" Name="SearchBar" Watermark="Search notes" Margin="10"></TextBox>
+                        <Button Foreground="Black" Background="PaleGreen" HorizontalContentAlignment="Center" Width = "100" Margin = "10" Content = "Search" Name="SearchButton" Click="SearchButton_OnClick"></Button>
+
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                        <ListBox Background="LightBlue" Name="NotesBox" Width = "350" Height="370" Margin="10" CornerRadius="5"></ListBox>                
+                        <StackPanel>
+                                <Button Foreground="Black" Background="LightYellow" HorizontalContentAlignment="Center" Width = "100" Margin = "10" Content = "Edit" Name="EditButton" Click="EditButton_OnClick"></Button>
+                                <Button Foreground="Black" Background="LightYellow" HorizontalContentAlignment="Center" Width = "100" Margin = "10" Content = "Delete" Name="DeleteButton" Click="DeleteButton_OnClick" ></Button>
+                                <Button Foreground="Black" Background="LightYellow" HorizontalContentAlignment="Center" Width = "100" Margin = "10" Content = "New note" Name="NewButton" Click="NewButton_OnClick"></Button>
+                        </StackPanel>
+                </StackPanel>
+        </StackPanel>
+</Window>
