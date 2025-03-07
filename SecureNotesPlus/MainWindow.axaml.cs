@@ -18,7 +18,7 @@ public partial class MainWindow : Window
     }
     private void EditButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        WindowLocator.EditWindow = new EditWindow(NotesBox.SelectedItem as Note, NotesBox.SelectedItem.ToString());
+        WindowLocator.EditWindow = new EditWindow(NotesBox.SelectedItem as Note);
         WindowLocator.EditWindow.Show();
     }
 
@@ -32,7 +32,7 @@ public partial class MainWindow : Window
     {
         try
         {
-            notes.DeleteNote(NotesBox.SelectedItem as Note, NotesBox.SelectedItem.ToString());
+            notes.DeleteNote(NotesBox.SelectedItem as Note);
         }
         catch(NullReferenceException nRE)
         {

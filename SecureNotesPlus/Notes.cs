@@ -18,10 +18,10 @@ public class Notes
       noteList.Add(note);
    }
 
-   public void DeleteNote(Note note, string noteName)
+   public void DeleteNote(Note note)
    {
       noteList.Remove(note);
-      File.Delete(@"..\\..\\..\\Notes\" + noteName);
+      File.Delete(@"..\\..\\..\\Notes\" + note.getFileName());
       WindowLocator.MainWindow.UpdateNoteList();
    }
 

@@ -96,6 +96,6 @@ public class EncryptionService
         {
             Console.WriteLine($"The decryption failed. {ex}");
         }
-        return null;
+        return "";
     }
 }

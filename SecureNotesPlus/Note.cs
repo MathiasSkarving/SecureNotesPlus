@@ -12,10 +12,15 @@ public class Note
         this.fileName = fileName;
     }
 
-    public bool getIsEncrypted()
+    public bool getIsEncrypted(string filePath)
     {
-        return isEncrypted;
-    }
+        if (!File.Exists(filePath))
+            return false;
+
+        FileInfo fileInfo = new FileInfo(filePath);
+    
+        // AES block size is 16 bytes
+        return fileInfo.Length % 16 == 0;    }
 
     public string getFileName()
     {

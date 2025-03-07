@@ -11,21 +11,26 @@ public partial class EditWindow : Window
 {
     private Note currentNote;
     private string currentFileName = "";
-    public EditWindow(Note noteInput, string fileNameInput)
+    private bool encrypted;
+
+    public EditWindow(Note noteInput)
     {
         InitializeComponent();
         currentNote = noteInput;
-        currentFileName = fileNameInput;
+        currentFileName = noteInput.getFileName();
 
-        using (FileStream fileStream = new FileStream(@"..\\..\\..\\Notes\" + currentFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+        using (FileStream fileStream = new FileStream(@"..\\..\\..\\Notes\" + currentFileName, FileMode.Open,
+                   FileAccess.Read, FileShare.ReadWrite))
         using (StreamReader reader = new StreamReader(fileStream))
         {
             EditNoteBox.Text = reader.ReadToEnd();
         }
     }
+
     private void SaveButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        using (FileStream fileStream = new FileStream(@"..\\..\\..\\Notes\" + currentFileName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
+        using (FileStream fileStream = new FileStream(@"..\\..\\..\\Notes\" + currentFileName, FileMode.Create,
+                   FileAccess.Write, FileShare.ReadWrite))
         using (StreamWriter streamWriter = new StreamWriter(fileStream))
         {
             streamWriter.Write(EditNoteBox.Text);
@@ -34,34 +39,42 @@ public partial class EditWindow : Window
 
     private void SaveEncryptButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        EncryptionService encryptionService = new EncryptionService();
-        encryptionService.EncryptFile(PasswordBlock.Text, currentFileName, EditNoteBox.Text);
-        using (FileStream fileStream = new FileStream(@"..\\..\\..\\Notes\" + currentFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-        using (StreamReader reader = new StreamReader(fileStream))
-        {
-            EditNoteBox.Text = reader.ReadToEnd();
-        }
+            EncryptionService encryptionService = new EncryptionService();
+            encryptionService.EncryptFile(PasswordBlock.Text, currentFileName, EditNoteBox.Text);
+            using (FileStream fileStream = new FileStream(@"..\\..\\..\\Notes\" + currentFileName, FileMode.Open,
+                       FileAccess.Read, FileShare.ReadWrite))
+            using (StreamReader reader = new StreamReader(fileStream))
+            {
+                EditNoteBox.Text = reader.ReadToEnd();
+            }
     }
+
 
     private void DecryptAndSaveButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        EncryptionService encryptionService = new EncryptionService();
-        string decryptedText = encryptionService.DecryptFile(PasswordBlock.Text, currentFileName);
-        
-        using (FileStream fileStream = new FileStream(@"..\\..\\..\\Notes\" + currentFileName, FileMode.Create, FileAccess.Write, FileShare.ReadWrite))
-        using (StreamWriter streamWriter = new StreamWriter(fileStream))
+        if (!String.IsNullOrWhiteSpace(EditNoteBox.Text))
         {
-            if (decryptedText != null)
+            EncryptionService encryptionService = new EncryptionService();
+            string decryptedText = encryptionService.DecryptFile(PasswordBlock.Text, currentFileName);
+
+            using (FileStream fileStream = new FileStream(@"..\\..\\..\\Notes\" + currentFileName, FileMode.Create,
+                       FileAccess.Write, FileShare.ReadWrite))
+            using (StreamWriter streamWriter = new StreamWriter(fileStream))
             {
                 streamWriter.Write(decryptedText);
+                EditNoteBox.Text = decryptedText;
             }
         }
     }
+
     private void DecryptAndShowButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        EncryptionService encryptionService = new EncryptionService();
-        string decryptedText = encryptionService.DecryptFile(PasswordBlock.Text, currentFileName);
-        EditNoteBox.Clear();
-        EditNoteBox.Text = decryptedText;
+        if (!String.IsNullOrWhiteSpace(EditNoteBox.Text))
+        {
+            EncryptionService encryptionService = new EncryptionService();
+            string decryptedText = encryptionService.DecryptFile(PasswordBlock.Text, currentFileName);
+
+            EditNoteBox.Text = decryptedText;
+        }
     }
 }
