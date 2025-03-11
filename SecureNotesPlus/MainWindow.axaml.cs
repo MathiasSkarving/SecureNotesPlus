@@ -18,13 +18,20 @@ public partial class MainWindow : Window
     }
     private void EditButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        WindowLocator.EditWindow = new EditWindow(NotesBox.SelectedItem as Note);
-        WindowLocator.EditWindow.Show();
+        try
+        {
+            WindowLocator.EditWindow = new EditWindow(NotesBox.SelectedItem as Note);
+            WindowLocator.EditWindow.Show();
+        }
+        catch (NullReferenceException exception)
+        {
+            Console.WriteLine(exception.Message);
+        }
     }
 
     private void NewButton_OnClick(object? sender, RoutedEventArgs e)
     {
-        WindowLocator.NewFileWindow = new NewFileWindow();
+        WindowLocator.NewFileWindow = new NewFileWindow(notes.getNotes());
         WindowLocator.NewFileWindow.Show();
     }
 
@@ -36,13 +43,37 @@ public partial class MainWindow : Window
         }
         catch(NullReferenceException nRE)
         {
-            throw new NullReferenceException(nRE.Message);
         }
     }
 
     private void SearchButton_OnClick(object? sender, RoutedEventArgs e)
     {
         
+    }
+
+    public void SearchNotes()
+    {
+        if (SearchBar.Text == "" || SearchBar.Text == null)
+        {
+            NotesBox.Items.Clear();
+
+            foreach (Note note in notes.getNotes())
+            {
+                NotesBox.Items.Add(note);
+            }   
+        }
+        else
+        {
+            NotesBox.Items.Clear();
+
+            foreach (Note note in notes.getNotes())
+            {
+                if (note.getFileName().Contains(SearchBar.Text))
+                {
+                    NotesBox.Items.Add(note);
+                }
+            }   
+        }
     }
 
     public void UpdateNoteList()
@@ -52,5 +83,10 @@ public partial class MainWindow : Window
         {
             NotesBox.Items.Add(note);
         }
+    }
+
+    private void SearchBar_OnTextChanged(object? sender, TextChangedEventArgs e)
+    {
+        SearchNotes();
     }
 }

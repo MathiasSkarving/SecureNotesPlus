@@ -7,11 +7,12 @@ namespace SecureNotesPlus;
 
 public class EncryptionService
 {
-    public void EncryptFile(string password, string fileName, string encryptionText)
+    public bool EncryptFile(string password, string filePath, string encryptionText)
     {
+        if(password == "") return false;
         try
         {
-            using (FileStream fileStream = new(@"..\\..\\..\\Notes\" + fileName, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
+            using (FileStream fileStream = new(filePath, FileMode.OpenOrCreate, FileAccess.Write, FileShare.ReadWrite))
             {
                 using (Aes aes = Aes.Create())
                 {
@@ -29,9 +30,6 @@ public class EncryptionService
                                aes.CreateEncryptor(),
                                CryptoStreamMode.Write))
                     {
-                        // By default, the StreamWriter uses UTF-8 encoding.
-                        // To change the text encoding, pass the desired encoding as the second parameter.
-                        // For example, new StreamWriter(cryptoStream, Encoding.Unicode).
                         using (StreamWriter encryptWriter = new(cryptoStream))
                         {
                             encryptWriter.WriteLine(encryptionText);
@@ -41,18 +39,21 @@ public class EncryptionService
             }
 
             Console.WriteLine("The file was encrypted.");
+            return true;
         }
         catch (Exception ex)
         {
             Console.WriteLine($"The encryption failed. {ex}");
         }
+        return false;
     }
 
-    public string DecryptFile(string password, string fileName)
+    public (bool,string) DecryptFile(string password, string filePath)
     {
+        if(password == "") return (false, "");
         try
         {
-            using (FileStream fileStream = new(@"..\\..\\..\\Notes\" + fileName, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
+            using (FileStream fileStream = new(filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
             {
                 using (Aes aes = Aes.Create())
                 {
@@ -86,7 +87,14 @@ public class EncryptionService
                         using (StreamReader decryptReader = new(cryptoStream))
                         {
                             string decryptedMessage = decryptReader.ReadToEnd();
-                            return decryptedMessage;
+                            if (decryptedMessage == "")
+                            {
+                                return (false, decryptedMessage);
+                            }
+                            else
+                            {
+                                return (true, decryptedMessage);
+                            }
                         }
                     }
                 }
@@ -96,6 +104,6 @@ public class EncryptionService
         {
             Console.WriteLine($"The decryption failed. {ex}");
         }
-        return "";
+        return (false, null);
     }
 }

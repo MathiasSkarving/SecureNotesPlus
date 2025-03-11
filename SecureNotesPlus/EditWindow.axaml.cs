@@ -9,72 +9,61 @@ namespace SecureNotesPlus;
 
 public partial class EditWindow : Window
 {
-    private Note currentNote;
-    private string currentFileName = "";
-    private bool encrypted;
-
+    string exeDir = AppDomain.CurrentDomain.BaseDirectory;
+    private string _filePath;
+    private readonly EncryptionService _encryptionService = new();
+    
     public EditWindow(Note noteInput)
     {
         InitializeComponent();
-        currentNote = noteInput;
-        currentFileName = noteInput.getFileName();
-
-        using (FileStream fileStream = new FileStream(@"..\\..\\..\\Notes\" + currentFileName, FileMode.Open,
-                   FileAccess.Read, FileShare.ReadWrite))
-        using (StreamReader reader = new StreamReader(fileStream))
+        _filePath = exeDir+@"\Notes\" + noteInput.getFileName();
+        LoadFileContent();
+    }
+    
+    private void LoadFileContent()
+    {
+        if (File.Exists(_filePath))
         {
-            EditNoteBox.Text = reader.ReadToEnd();
+            using (FileStream fileStream = new FileStream(_filePath, FileMode.Open, FileAccess.ReadWrite, FileShare.ReadWrite))
+            using (StreamReader streamReader = new StreamReader(fileStream))
+            {
+                EditNoteBox.Text = streamReader.ReadToEnd();
+            }
         }
     }
 
-    private void SaveButton_OnClick(object? sender, RoutedEventArgs e)
+    public void writeAllText(string text)
     {
-        using (FileStream fileStream = new FileStream(@"..\\..\\..\\Notes\" + currentFileName, FileMode.Create,
+        using (FileStream fileStream = new FileStream(_filePath, FileMode.Open,
                    FileAccess.Write, FileShare.ReadWrite))
         using (StreamWriter streamWriter = new StreamWriter(fileStream))
         {
-            streamWriter.Write(EditNoteBox.Text);
+            streamWriter.Write(text);
         }
     }
 
-    private void SaveEncryptButton_OnClick(object? sender, RoutedEventArgs e)
+    private void SaveOnClick(object? sender, RoutedEventArgs e)
     {
-            EncryptionService encryptionService = new EncryptionService();
-            encryptionService.EncryptFile(PasswordBlock.Text, currentFileName, EditNoteBox.Text);
-            using (FileStream fileStream = new FileStream(@"..\\..\\..\\Notes\" + currentFileName, FileMode.Open,
-                       FileAccess.Read, FileShare.ReadWrite))
-            using (StreamReader reader = new StreamReader(fileStream))
-            {
-                EditNoteBox.Text = reader.ReadToEnd();
-            }
+        writeAllText(EditNoteBox.Text);
     }
-
-
-    private void DecryptAndSaveButton_OnClick(object? sender, RoutedEventArgs e)
+    private void EncryptOnClick(object? sender, RoutedEventArgs e)
     {
-        if (!String.IsNullOrWhiteSpace(EditNoteBox.Text))
+        if (_encryptionService.EncryptFile(PasswordBlock.Text, _filePath, EditNoteBox.Text))
         {
-            EncryptionService encryptionService = new EncryptionService();
-            string decryptedText = encryptionService.DecryptFile(PasswordBlock.Text, currentFileName);
-
-            using (FileStream fileStream = new FileStream(@"..\\..\\..\\Notes\" + currentFileName, FileMode.Create,
-                       FileAccess.Write, FileShare.ReadWrite))
-            using (StreamWriter streamWriter = new StreamWriter(fileStream))
-            {
-                streamWriter.Write(decryptedText);
-                EditNoteBox.Text = decryptedText;
-            }
+            LoadFileContent();
+            EncryptButton.IsEnabled = false;
+            SaveButton.IsEnabled = false;
         }
     }
-
-    private void DecryptAndShowButton_OnClick(object? sender, RoutedEventArgs e)
+    private void DecryptOnClick(object? sender, RoutedEventArgs e)
     {
-        if (!String.IsNullOrWhiteSpace(EditNoteBox.Text))
-        {
-            EncryptionService encryptionService = new EncryptionService();
-            string decryptedText = encryptionService.DecryptFile(PasswordBlock.Text, currentFileName);
+        var (success, decryptedText) = _encryptionService.DecryptFile(PasswordBlock.Text, _filePath);
 
+        if (success)
+        {
             EditNoteBox.Text = decryptedText;
+            EncryptButton.IsEnabled = true;
+            SaveButton.IsEnabled = true;
         }
     }
 }

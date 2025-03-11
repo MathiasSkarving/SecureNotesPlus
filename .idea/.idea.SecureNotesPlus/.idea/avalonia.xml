@@ -3,9 +3,11 @@
   <component name="AvaloniaProject">
     <option name="projectPerEditor">
       <map>
+        <entry key="SecureNotesPlus/App.axaml" value="SecureNotesPlus/SecureNotesPlus.csproj" />
         <entry key="SecureNotesPlus/EditWindow.axaml" value="SecureNotesPlus/SecureNotesPlus.csproj" />
         <entry key="SecureNotesPlus/MainWindow.axaml" value="SecureNotesPlus/SecureNotesPlus.csproj" />
         <entry key="SecureNotesPlus/NewFile.axaml" value="SecureNotesPlus/SecureNotesPlus.csproj" />
+        <entry key="SecureNotesPlus/NewFileWindow.axaml" value="SecureNotesPlus/SecureNotesPlus.csproj" />
       </map>
     </option>
   </component>

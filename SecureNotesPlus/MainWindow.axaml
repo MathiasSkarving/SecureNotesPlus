@@ -14,9 +14,7 @@
         
         <StackPanel>
                 <StackPanel Orientation="Horizontal">
-                        <TextBox HorizontalAlignment="Left" Width = "350" Name="SearchBar" Watermark="Search notes" Margin="10"></TextBox>
-                        <Button Foreground="Black" Background="PaleGreen" HorizontalContentAlignment="Center" Width = "100" Margin = "10" Content = "Search" Name="SearchButton" Click="SearchButton_OnClick"></Button>
-
+                        <TextBox TextChanged="SearchBar_OnTextChanged" HorizontalAlignment="Left" Width = "350" Name="SearchBar" Watermark="Search notes" Margin="10"></TextBox>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                         <ListBox Background="LightBlue" Name="NotesBox" Width = "350" Height="370" Margin="10" CornerRadius="5"></ListBox>                

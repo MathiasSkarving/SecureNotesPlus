@@ -23,4 +23,8 @@
     <ItemGroup>
       <Folder Include="Notes\" />
     </ItemGroup>
+
+    <Target Name="CreateDataFolder" AfterTargets="Build">
+        <MakeDir Directories="$(TargetDir)Notes" />
+    </Target>
 </Project>
